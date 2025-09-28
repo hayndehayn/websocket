@@ -1,0 +1,5 @@
+# Dist 
+Backend/dist/.env
+Backend/dist/package-lock.json
+Backend/dist/node_modules
+Backend/dist/tsconfig.json
