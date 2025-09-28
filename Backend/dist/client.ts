@@ -3,13 +3,13 @@ import WebSocket from 'ws';
 const ws = new WebSocket('ws://localhost:8080');
 
 ws.on('open', () => {
-     console.log('❗Connected to the server');
+     console.log('❗- Connected to the server');
      ws.send('Wazzup Server!');
 });
 
 ws.on('message', (message: WebSocket.RawData) => {
      const text = message.toString();
-     console.log(`📨 - Sended: ${text}`);
+     console.log(`📨 - Received: ${text}`);
 });
 
 ws.on('error', (error: Error) => {
