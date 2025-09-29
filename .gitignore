@@ -3,8 +3,8 @@ App/node_modules
 
 # Dist 
 Backend/dist/.env
-Backend/dist/node_modules
-Backend/dist/tsconfig.json
+Backend/node_modules
+# Backend/dist/tsconfig.json
 
 # Logs
 logs

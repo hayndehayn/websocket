@@ -1,7 +1,7 @@
 import * as http from 'http';
 import WebSocket, { WebSocketServer } from 'ws';
 import axios from 'axios';
-import type { PriceResponce } from './interface/priceResponce';
+import type { PriceResponce } from './interface/priceResponce.ts';
 
 const server = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
      res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -12,7 +12,6 @@ const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws: WebSocket) => {
      console.log('✅ - Client connected');
-
      const sendPrice = async () => {
           try {
                const response = await axios.get<PriceResponce>('https://api.diadata.org/v1/assetQuotation/Bitcoin/0x0000000000000000000000000000000000000000')
