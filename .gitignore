@@ -4,6 +4,7 @@ App/node_modules
 # Dist 
 Backend/dist/.env
 Backend/node_modules
+Backend/src/node_modules
 # Backend/dist/tsconfig.json
 
 # Logs
