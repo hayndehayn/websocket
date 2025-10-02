@@ -22,6 +22,16 @@
   - Login and registration functionality.
   - Personalized dashboards for tracking favorite cryptocurrencies.
 
+## 🧠 Tech Stack
+
+**Frontend**: React, React-Router
+
+**Backend**: Node.js, WebSocket
+
+**Database**: MongoDB (planned)
+
+**Authentication**: JWT (planned)
+
 ---
 
 Installation instructions will be added soon.
