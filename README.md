@@ -9,9 +9,12 @@
 
 ## 🛠️ Planned Improvements
 
+- ## **State Management with Redux**:
+  - White/Dark Mode Switching
 - **Enhanced Interface**:
   - A modern and user-friendly design for better visualization of data.
   - Graphs and charts for price trends.
+  - Tailwind CSS framework for styling.
 - **Deeper API Integration**:
   - Support for multiple cryptocurrencies.
   - Historical data analysis and more detailed statistics.
@@ -24,7 +27,7 @@
 
 ## 🧠 Tech Stack
 
-**Frontend**: React, React-Router
+**Frontend**: React, React-Router, Redux, Tailwind
 
 **Backend**: Node.js, WebSocket
 
