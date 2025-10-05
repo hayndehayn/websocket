@@ -23,9 +23,9 @@ const themeSlice = createSlice({
      reducers: {
           toggleTheme: (state) => {
                state.isDark = !state.isDark;
-               // Сохраняем в localStorage
+               // localStorage
                localStorage.setItem('theme', JSON.stringify(state.isDark));
-               // Применяем класс к <html>
+               // HTML class
                document.documentElement.classList.toggle('dark', state.isDark);
           },
           setTheme: (state, action: PayloadAction<boolean>) => {

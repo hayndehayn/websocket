@@ -156,15 +156,26 @@
 
   /* ? Buttons */
   .btn-primary {
-    @apply bg-gradient-to-r from-green-500 to-emerald-600 text-black px-8 py-3 rounded-full font-semibold hover:from-green-400 hover:to-emerald-500 transition-all duration-300 shadow-lg hover:shadow-green-500/25 dark:text-white dark:shadow-lg dark:hover:shadow-green-500/25;
+    @apply bg-gradient-to-r from-green-500 to-emerald-600 text-black px-8 py-3 rounded-full font-semibold hover:from-green-400 hover:to-emerald-500 transition-all duration-300 shadow-lg hover:shadow-green-500/25 dark:text-white dark:shadow-lg dark:hover:shadow-green-500/25 disabled:opacity-60 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply border-2 border-gray-900 text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-900 hover:text-white transition-all duration-300 dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-gray-900;
+    @apply border-2 border-gray-900 text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-900 hover:text-white transition-all duration-300 dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-gray-900 disabled:opacity-60 disabled:cursor-not-allowed;
   }
 
   .btn-learn {
-    @apply bg-gradient-to-r from-green-500 to-emerald-600 text-black px-8 py-4 rounded-full font-semibold text-lg hover:from-green-400 hover:to-emerald-500 transition-all duration-300 shadow-lg hover:shadow-green-500/25;
+    @apply bg-gradient-to-r from-green-500 to-emerald-600 text-black px-8 py-4 rounded-full font-semibold text-lg hover:from-green-400 hover:to-emerald-500 transition-all duration-300 shadow-lg hover:shadow-green-500/25 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  /* Alerts */
+  .alert {
+    @apply rounded-lg px-4 py-3 border text-sm flex items-start gap-2;
+  }
+  .alert-success {
+    @apply border-green-300 text-green-800 bg-green-50 dark:bg-green-900/20 dark:text-green-300 dark:border-green-700;
+  }
+  .alert-error {
+    @apply border-red-300 text-red-800 bg-red-50 dark:bg-red-900/20 dark:text-red-300 dark:border-red-700;
   }
 
   /* ? Cards */
