@@ -1,40 +1,78 @@
-## Cryptocurrency Tracker with WebSocket
+# Cryptocurrency Tracker with WebSocket
 
-## 📷 Current Features
+![Screenshot](https://cdn.discordapp.com/attachments/1263643495688699949/1424326330131939359/screen.jpg?ex=68e38ac3&is=68e23943&hm=ed4cc889f819a920c11f1442e8359c886dac24c4d397252d3aaca65a8d8e8856&)
 
-- **Real-time Updates**: Get live cryptocurrency prices updated every few seconds.
-- **WebSocket Communication**: Efficient and fast data transfer between the server and client.
+A simple full‑stack project that streams live cryptocurrency prices from a Node.js backend to a React frontend over WebSockets. State is managed with Redux Toolkit and the UI is styled with Tailwind.
 
----
+## Repository Structure
 
-## 🛠️ Planned Improvements
+- App/ — Frontend (Vite + React + TypeScript)
+  - src/
+    - components/, pages/, store/
+  - scripts: dev, build, preview, lint
+- Backend/ — Backend (Node.js + TypeScript)
+  - src/server.ts — WebSocket price broadcasting
+  - dist/ — compiled JS output
+  - scripts: build, start
 
-- ## **State Management with Redux**:
-  - White/Dark Mode Switching
-- **Enhanced Interface**:
-  - A modern and user-friendly design for better visualization of data.
-  - Graphs and charts for price trends.
-  - Tailwind CSS framework for styling.
-- **Deeper API Integration**:
-  - Support for multiple cryptocurrencies.
-  - Historical data analysis and more detailed statistics.
-- **WebSocket Security**:
-  - Authentication and authorization for secure communication.
-  - Protection against unauthorized access.
-- **User Accounts**:
-  - Login and registration functionality.
-  - Personalized dashboards for tracking favorite cryptocurrencies.
+## Features (Current)
 
-## 🧠 Tech Stack
+- Real-time price updates via WebSocket
+- Client-side state management with Redux Toolkit
+- Basic routing with React Router
 
-**Frontend**: React, React-Router, Redux, Tailwind
+## Tech Stack (Current)
 
-**Backend**: Node.js, WebSocket
+- Frontend: React, React Router, Redux Toolkit, Tailwind, Vite, TypeScript
+- Backend: Node.js, ws (WebSocket), Socket.IO (dependency available), TypeScript, Axios, dotenv
+- Database: MongoDB (planned)
+- Auth: JWT (planned)
 
-**Database**: MongoDB (planned)
+## Installation
 
-**Authentication**: JWT (planned)
+1. Clone the repository
 
----
+- git clone <repo-url>
+- cd websocket
 
-Installation instructions will be added soon.
+2. Install dependencies
+
+- Frontend
+  - cd App
+  - npm install
+- Backend
+  - cd ../Backend
+  - npm install
+
+3. Environment variables (Backend)
+
+- Create a .env file in Backend/ if needed for external APIs (optional at this stage)
+
+## Running the project (Development)
+
+Terminal A — Backend
+
+- cd Backend
+- npm run build
+- npm run start
+
+Terminal B — Frontend
+
+- cd App
+- npm run dev
+
+- Frontend dev server default: http://localhost:5173
+- Backend runs Node at dist/server.js (check server port inside code, typically 3000 or similar)
+
+## What’s Next
+
+- Backend
+  - JWT-based authentication
+  - Password hashing with bcrypt
+  - REST API for auth and user data
+  - Persisting data to MongoDB
+- Frontend
+  - Auth flows (login/register)
+  - Protected routes and protected WebSocket channel
+  - Dashboard view for tracked assets
+  - Improved UI/UX

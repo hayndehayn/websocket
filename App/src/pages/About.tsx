@@ -4,39 +4,34 @@ import image from "../assets/image/artem.webp";
 const AboutPage: React.FC = () => {
   return (
     <>
-      <main className="bg-gradient-to-b from-gray-900 via-black to-gray-900 flex flex-col items-center justify-center p-8 text-center min-h-[50vh] relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.1)_0%,transparent_50%)] pointer-events-none"></div>
-        <div className="max-w-4xl mx-auto relative z-10">
-          <h1 className="text-5xl font-bold mb-6">
+      <main className="hero-section">
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1 className="hero-title">
             About{" "}
             <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
               CryptoSocket
             </span>
           </h1>
-          <p className="text-xl mb-8 text-gray-300">
+          <p className="hero-subtitle">
             Your go-to platform for real-time cryptocurrency tracking.
           </p>
         </div>
       </main>
 
-      <section
-        id="story"
-        className="py-16 bg-gray-800 border-t border-gray-700"
-      >
+      <section id="story" className="section-wrapper">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-            Our Story
-          </h2>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <h2 className="section-title">Our Story</h2>
+          <div className="grid-story">
             <div>
-              <p className="text-lg text-gray-300 mb-6">
+              <p className="text-lg feature-text mb-6">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
                 quibusdam reiciendis perspiciatis dolor! Dolorum tempora dicta
                 quidem et quo iste iure non quia cum repudiandae debitis numquam
                 magnam cumque aut, quis itaque repellat iusto consequuntur! Quae
                 quis aliquam iste ratione obcaecati necessitatibus?
               </p>
-              <p className="text-lg text-gray-300 mb-6">
+              <p className="text-lg feature-text mb-6">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
                 quibusdam reiciendis perspiciatis dolor! Dolorum tempora dicta
                 quidem et quo iste iure non quia cum repudiandae debitis numquam
@@ -44,45 +39,41 @@ const AboutPage: React.FC = () => {
                 quis aliquam iste ratione obcaecati necessitatibus?
               </p>
               <div className="text-center md:text-left">
-                <button className="bg-gradient-to-r from-green-500 to-emerald-600 text-black px-8 py-3 rounded-full font-semibold hover:from-green-400 hover:to-emerald-500 transition-all duration-300 shadow-lg hover:shadow-green-500/25">
-                  Read Our Full Story
-                </button>
+                <button className="btn-primary">Read Our Full Story</button>
               </div>
             </div>
             <div className="relative">
               <img
                 src="https://placehold.co/800x400/cccccc/969696.png"
                 alt="Our Story"
-                className="rounded-lg shadow-xl w-full h-64 object-cover md:h-auto border border-gray-600"
+                className="story-img"
               />
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-gray-900 border-t border-gray-700">
+      <section className="section-wrapper">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Our Mission & Vision
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="text-center p-8 bg-gray-800 rounded-xl border border-gray-700 shadow-lg hover:shadow-purple-500/20 transition-shadow duration-300">
-              <div className="text-5xl mb-4">🎯</div>
+          <h2 className="mission-vision-title">Our Mission & Vision</h2>
+          <div className="grid-2">
+            <div className="mission-card">
+              <div className="icon-target">🎯</div>
               <h3 className="text-2xl font-semibold mb-4 text-purple-400">
                 Mission
               </h3>
-              <p className="text-gray-300">
+              <p className="feature-text">
                 To deliver accurate, real-time cryptocurrency data and tools
                 that simplify market tracking and empower informed
                 decision-making for all users.
               </p>
             </div>
-            <div className="text-center p-8 bg-gray-800 rounded-xl border border-gray-700 shadow-lg hover:shadow-cyan-500/20 transition-shadow duration-300">
-              <div className="text-5xl mb-4">🔮</div>
+            <div className="mission-card">
+              <div className="icon-target">🔮</div>
               <h3 className="text-2xl font-semibold mb-4 text-cyan-400">
                 Vision
               </h3>
-              <p className="text-gray-300">
+              <p className="feature-text">
                 To be the definitive hub for crypto intelligence, fostering a
                 transparent and accessible digital asset ecosystem for everyone.
               </p>
@@ -91,47 +82,35 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      <section id="team" className="py-16 bg-gray-800 border-t border-gray-700">
+      <section id="team" className="section-wrapper">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-            Meet Our Team
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-8 bg-gray-900 rounded-xl border border-gray-700 shadow-lg hover:shadow-green-500/20 transition-shadow duration-300">
-              <img
-                src={image}
-                alt="CEO"
-                className="rounded-full mx-auto mb-4 w-24 h-24 object-cover border-2 border-green-500"
-              />
-              <h3 className="text-xl font-semibold mb-2 text-green-400">
-                Artem
-              </h3>
-              <p className="text-emerald-400 mb-4">CEO & Founder</p>
-              <p className="text-gray-300 text-sm">---</p>
+          <h2 className="team-title">Meet Our Team</h2>
+          <div className="grid-3">
+            <div className="team-card">
+              <img src={image} alt="CEO" className="team-img" />
+              <h3 className="team-name">Artem</h3>
+              <p className="team-role">CEO & Founder</p>
+              <p className="team-desc">---</p>
             </div>
-            <div className="text-center p-8 bg-gray-900 rounded-xl border border-gray-700 shadow-lg hover:shadow-purple-500/20 transition-shadow duration-300">
+            <div className="team-card">
               <img
                 src="https://placehold.co/400x400/cccccc/969696.png"
                 alt="CTO"
                 className="rounded-full mx-auto mb-4 w-24 h-24 object-cover border-2 border-purple-500"
               />
-              <h3 className="text-xl font-semibold mb-2 text-purple-400">
-                John Smith
-              </h3>
-              <p className="text-violet-400 mb-4">CTO</p>
-              <p className="text-gray-300 text-sm">Mock.</p>
+              <h3 className="team-name">John Smith</h3>
+              <p className="text-gray-600 dark:text-violet-400 mb-4">CTO</p>
+              <p className="team-desc">Mock.</p>
             </div>
-            <div className="text-center p-8 bg-gray-900 rounded-xl border border-gray-700 shadow-lg hover:shadow-cyan-500/20 transition-shadow duration-300">
+            <div className="team-card">
               <img
                 src="https://placehold.co/400x400/cccccc/969696.png"
                 alt="CMO"
                 className="rounded-full mx-auto mb-4 w-24 h-24 object-cover border-2 border-cyan-500"
               />
-              <h3 className="text-xl font-semibold mb-2 text-cyan-400">
-                Alice Johnson
-              </h3>
-              <p className="text-cyan-400 mb-4">CMO</p>
-              <p className="text-gray-300 text-sm">Mock.</p>
+              <h3 className="team-name">Alice Johnson</h3>
+              <p className="text-gray-600 dark:text-cyan-400 mb-4">CMO</p>
+              <p className="team-desc">Mock.</p>
             </div>
           </div>
         </div>
