@@ -1,83 +1,114 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { subscribe } from "../ws/websocket";
+
+type CoinInfo = { id: string; price: number; change24h?: number; ts?: number };
 
 const Dashboard: React.FC = () => {
-  const token = useSelector((s: RootState) => s.auth.token);
-  const [messages, setMessages] = useState<string[]>([]);
-  const [connecting, setConnecting] = useState<boolean>(false);
-  const [connected, setConnected] = useState<boolean>(false);
-  const wsRef = useRef<WebSocket | null>(null);
+  const [coins, setCoins] = useState<CoinInfo[]>([]);
 
   useEffect(() => {
-    if (!token) return;
-
-    setConnecting(true);
-    setConnected(false);
-
-    // clear previous logs on new connection ? Optional
-    setMessages([]);
-
-    const wsUrl = `ws://localhost:8080?token=${encodeURIComponent(token)}`;
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
-
-    ws.onopen = () => {
-      setConnected(true);
-      setConnecting(false);
-      setMessages((prev) => ["Connected to secure WebSocket", ...prev]);
-    };
-    ws.onmessage = (ev) => {
-      setMessages((prev) => [ev.data, ...prev]);
-    };
-    ws.onerror = () => {
-      if (connected) {
-        setMessages((prev) => ["WebSocket error", ...prev]);
+    // ? Subscribe to global WebSocket updates
+    const handle = (e: MessageEvent) => {
+      try {
+        const msg = JSON.parse(e.data);
+        if (msg.type === "prices" && Array.isArray(msg.data)) {
+          setCoins(msg.data);
+        }
+      } catch (err) {
+        console.warn("WS parse error", err);
       }
     };
-    ws.onclose = (ev) => {
-      if (connected) {
-        const info = ev.reason
-          ? `Connection closed: ${ev.reason} (${ev.code})`
-          : `Connection closed (${ev.code})`;
-        setMessages((prev) => [info, ...prev]);
-      }
-      setConnected(false);
-      setConnecting(false);
-    };
 
+    const unsubscribe = subscribe(handle);
+    // ? On unmount: unsubscribe, do not close global socket
     return () => {
-      ws.onopen = null;
-      ws.onmessage = null;
-      ws.onerror = null;
-      ws.onclose = null;
-      ws.close();
+      unsubscribe();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, []);
 
   return (
-    <main className="section-wrapper">
-      <div className="container mx-auto px-4">
-        <h1 className="section-title">Secure Dashboard</h1>
-        <p className="feature-text mb-6">
-          Live feed from secure WebSocket (BTC prices).
+    <div className="p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-extrabold tracking-tight">
+          Market Dashboard
+        </h1>
+        <p className="text-sm text-gray-500">
+          Live prices updated from backend
         </p>
-        {connecting && (
-          <div className="alert alert-success mb-4">Connecting…</div>
-        )}
-        <div className="feature-card text-left">
-          <div className="mb-4 text-sm opacity-70">Latest first</div>
-          <div className="space-y-2 max-h-80 overflow-auto">
-            {messages.map((m, i) => (
-              <div key={i} className="text-sm break-all">
-                {m}
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
-    </main>
+
+      <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {coins.length === 0 && (
+          <div className="col-span-full rounded-lg border border-dashed border-gray-200 p-8 text-center text-gray-500">
+            Loading market data...
+          </div>
+        )}
+
+        {coins.map((c) => (
+          <Link
+            to={`/coin/${c.id}`}
+            key={c.id}
+            className="group relative block rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-lg transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center gap-3">
+                  {/* ? Placeholder for coin logo */}
+                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-indigo-50 text-indigo-600 font-semibold">
+                    {c.id.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {c.id.toUpperCase()}
+                    </h3>
+                    <p className="text-xs text-gray-500">Price preview</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-right">
+                <div className="text-xl font-bold text-gray-900">
+                  ${c.price}
+                </div>
+                <div
+                  className={`mt-2 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium ${
+                    (c.change24h ?? 0) >= 0
+                      ? "bg-green-50 text-green-700"
+                      : "bg-red-50 text-red-700"
+                  }`}
+                >
+                  <span>{(c.change24h ?? 0).toFixed(2)}%</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+              <div>
+                {c.ts ? (
+                  <span>
+                    Updated{" "}
+                    {new Date(c.ts).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                ) : (
+                  <span>—</span>
+                )}
+              </div>
+              <div>
+                <span className="text-xs text-gray-400 group-hover:text-gray-600">
+                  Open details →
+                </span>
+              </div>
+            </div>
+
+            <div className="pointer-events-none absolute inset-0 rounded-xl ring-0 transition-opacity opacity-0 group-hover:opacity-5" />
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 };
 

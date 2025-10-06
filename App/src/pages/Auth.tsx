@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, registerUser } from "../store/authSlice";
 import type { AppDispatch, RootState } from "../store";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, type Location } from "react-router-dom";
 
 type LocationState = {
   from?: { pathname?: string };
@@ -11,24 +11,36 @@ type LocationState = {
 const Auth: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const location = useLocation() as unknown as { state?: LocationState };
-  const { status, error } = useSelector((s: RootState) => s.auth);
+  const location = useLocation() as Location & { state?: LocationState };
+  const { status, error: authError } = useSelector((s: RootState) => s.auth);
 
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // clear errors when route changes or component mounts/unmounts
+    setFormError(null);
+    return () => setFormError(null);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (authError) setFormError(String(authError));
+  }, [authError]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
+    setFormError(null);
     if (!email || !password) {
       setMessage("Email and password are required");
       return;
     }
     try {
       if (mode === "register") {
-        // Auto-login after registration
+        // ? Auto-login after registration
         await dispatch(registerUser({ email, password })).unwrap();
         await dispatch(loginUser({ email, password })).unwrap();
         const from = location.state?.from?.pathname ?? "/dashboard";
@@ -44,6 +56,7 @@ const Auth: React.FC = () => {
           ? String((err as { message?: unknown }).message)
           : "Request failed";
       setMessage(msg);
+      setFormError(String(msg));
     }
   };
 
@@ -83,7 +96,7 @@ const Auth: React.FC = () => {
             />
           </label>
           {message && <div className={`alert `}>{message}</div>}
-          {error && <div className="alert alert-error">{error}</div>}
+          {formError && <div className="alert alert-error">{formError}</div>}
           <button
             type="submit"
             className="btn-primary w-full flex justify-center"
