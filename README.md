@@ -39,10 +39,10 @@ A simple full‑stack project that streams live cryptocurrency prices from a Nod
 
 - Frontend
   - cd App
-  - npm install
+  - npm i
 - Backend
   - cd ../Backend
-  - npm install
+  - npm i
 
 3. Environment variables (Backend)
 
