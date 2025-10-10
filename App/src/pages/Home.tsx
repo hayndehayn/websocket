@@ -20,7 +20,7 @@ const Home: React.FC = () => {
             optimize your investments effortlessly.
           </p>
           <div className="space-x-4 flex justify-center flex-wrap gap-4">
-            <button onClick={() => navigate("/auth")} className="btn-learn">
+            <button onClick={() => navigate("/login")} className="btn-learn">
               Get Started
             </button>
             <button

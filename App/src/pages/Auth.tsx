@@ -1,62 +1,79 @@
+// ...existing code...
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, registerUser } from "../store/authSlice";
+import { setUser } from "../store/authSlice";
 import type { AppDispatch, RootState } from "../store";
 import { useNavigate, useLocation, type Location } from "react-router-dom";
+import axios from "axios";
 
 type LocationState = {
   from?: { pathname?: string };
 };
 
+const base =
+  (import.meta.env.VITE_API_BASE as string) || "http://localhost:8080";
+
+type MaybeAuthError = { error?: string };
+
+const hasAuthError = (v: unknown): v is MaybeAuthError =>
+  typeof v === "object" && v !== null && "error" in v;
+
 const Auth: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const location = useLocation() as Location & { state?: LocationState };
-  const { status, error: authError } = useSelector((s: RootState) => s.auth);
+
+  // use full auth slice object to avoid referencing non-existent fields
+  const auth = useSelector((s: RootState) => s.auth);
 
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // clear errors when route changes or component mounts/unmounts
     setFormError(null);
     return () => setFormError(null);
   }, [location.pathname]);
 
   useEffect(() => {
-    if (authError) setFormError(String(authError));
-  }, [authError]);
+    if (hasAuthError(auth) && typeof auth.error === "string") {
+      setFormError(auth.error);
+    }
+  }, [auth]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
     setFormError(null);
-    if (!email || !password) {
-      setMessage("Email and password are required");
-      return;
-    }
+    setLoading(true);
     try {
-      if (mode === "register") {
-        // ? Auto-login after registration
-        await dispatch(registerUser({ email, password })).unwrap();
-        await dispatch(loginUser({ email, password })).unwrap();
-        const from = location.state?.from?.pathname ?? "/dashboard";
-        navigate(from, { replace: true });
+      const url = `${base}/api/auth/${mode === "login" ? "signin" : "signup"}`;
+      const body =
+        mode === "register" ? { email, password, name } : { email, password };
+      const r = await axios.post(url, body, { withCredentials: true });
+      const user = r.data?.data?.user;
+      if (user) {
+        dispatch(setUser(user));
+        // redirect to original page or Dashboard
+        const dest = (location.state as any)?.from?.pathname ?? "/dashboard";
+        navigate(dest, { replace: true });
       } else {
-        await dispatch(loginUser({ email, password })).unwrap();
-        const from = location.state?.from?.pathname ?? "/dashboard";
-        navigate(from, { replace: true });
+        setFormError("Unexpected response from server");
       }
     } catch (err: unknown) {
-      const msg =
-        typeof err === "object" && err !== null && "message" in err
-          ? String((err as { message?: unknown }).message)
-          : "Request failed";
-      setMessage(msg);
-      setFormError(String(msg));
+      let msg = "Request failed";
+      if (axios.isAxiosError(err)) {
+        msg = err.response?.data?.error ?? err.message ?? msg;
+      } else if (err instanceof Error) {
+        msg = err.message;
+      }
+      setFormError(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,14 +112,26 @@ const Auth: React.FC = () => {
               required
             />
           </label>
+          {mode === "register" && (
+            <label className="block mb-6">
+              <span className="block mb-2">Name</span>
+              <input
+                type="text"
+                className="w-full p-3 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                autoComplete="name"
+              />
+            </label>
+          )}
           {message && <div className={`alert `}>{message}</div>}
           {formError && <div className="alert alert-error">{formError}</div>}
           <button
             type="submit"
             className="btn-primary w-full flex justify-center"
-            disabled={status === "loading"}
+            disabled={loading}
           >
-            {status === "loading"
+            {loading
               ? "Please wait..."
               : mode === "login"
               ? "Sign In"
