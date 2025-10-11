@@ -7,8 +7,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.routes.js';
 import cookieParser from 'cookie-parser';
+import { MONGO_URI, JWT_SECRET, FRONTEND_ORIGIN, DEFAULT_PORT, JWT_COOKIE_NAME, } from './config.js';
 dotenv.config();
-const MONGO_URI = process.env.MONGO_URI;
 if (!MONGO_URI) {
     console.error('MONGO_URI is not set');
     process.exit(1);
@@ -16,7 +16,7 @@ if (!MONGO_URI) {
 // mask uri
 const maskedUri = MONGO_URI.replace(/(:\/\/[^:]+:)([^@]+)(@)/, '$1****$3');
 console.log('Using MONGO_URI:', maskedUri);
-const PORT = process.env.DEFAULT_PORT ? Number(process.env.DEFAULT_PORT) : 8080;
+const PORT = DEFAULT_PORT;
 const COINS = process.env.COINS_CONFIG
     ? JSON.parse(process.env.COINS_CONFIG)
     : [
@@ -26,28 +26,11 @@ const COINS = process.env.COINS_CONFIG
     ];
 const PRICE_INTERVAL = Number(process.env.PRICE_INTERVAL_MS ?? 10000);
 const MAX_HISTORY = Number(process.env.MAX_HISTORY ?? 200);
-async function startServer() {
-    try {
-        await mongoose.connect(MONGO_URI);
-        console.log('MongoDB connected');
-        // start HTTP + WS server only after DB ready
-        server.listen(PORT, () => {
-            console.log(`Backend listening on ${PORT}`);
-        });
-    }
-    catch (err) {
-        console.error('Mongo connection error', err);
-        process.exit(1);
-    }
-}
-startServer();
 const app = express();
 // ? CORS with specific origin for credentials
 app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN ?? 'http://localhost:5173',
+    origin: FRONTEND_ORIGIN,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json());
 app.use(cookieParser());
@@ -167,4 +150,18 @@ app.get('/api/coins/:id/chart', async (req, res) => {
         res.status(status).json({ error: 'Failed to fetch chart', code: status });
     }
 });
+async function startServer() {
+    try {
+        await mongoose.connect(MONGO_URI);
+        console.log('MongoDB connected');
+        server.listen(PORT, () => {
+            console.log(`Backend listening on ${PORT}`);
+        });
+    }
+    catch (err) {
+        console.error('Mongo connection error', err);
+        process.exit(1);
+    }
+}
+startServer();
 //# sourceMappingURL=server.js.map
