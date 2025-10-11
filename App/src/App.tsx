@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import api from "./api/axios";
 import { setUser } from "./store/authSlice";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -14,17 +15,23 @@ import About from "./pages/About";
 const App: React.FC = () => {
   const dispatch = useDispatch();
 
-  // ? Check if user is authenticated
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get("/api/auth/me");
+        const response = await api.get("/api/auth/me");
         const user = response.data?.data?.user;
         if (user) {
           dispatch(setUser(user));
         }
       } catch (error) {
-        // Not authenticated, ignore
+        if (
+          axios.isAxiosError &&
+          axios.isAxiosError(error) &&
+          error.response?.status === 401
+        ) {
+          return; // if not logged in
+        }
+        console.error("checkAuth error:", error);
       }
     };
     checkAuth();
